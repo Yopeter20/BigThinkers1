@@ -1,0 +1,96 @@
+{% extends "base.html" %}
+{% block title %}Admin{% endblock %}
+{% block content %}
+<section class="bt-page">
+  <h1 class="bt-page-title"><i class="fa-solid fa-shield-halved"></i> Admin Dashboard</h1>
+
+  <div class="bt-stats-grid">
+    <div class="bt-stat-card"><span>{{ stats.total_members }}</span><label>Total Members</label></div>
+    <div class="bt-stat-card"><span>{{ stats.basic }}</span><label>Basic</label></div>
+    <div class="bt-stat-card"><span>{{ stats.premium }}</span><label>Premium</label></div>
+    <div class="bt-stat-card"><span>{{ stats.vip }}</span><label>VIP</label></div>
+    <div class="bt-stat-card"><span>{{ stats.pending }}</span><label>Pending</label></div>
+    <div class="bt-stat-card"><span>{{ stats.active }}</span><label>Active</label></div>
+    <div class="bt-stat-card"><span>{{ stats.frozen }}</span><label>Frozen</label></div>
+    <div class="bt-stat-card"><span>{{ stats.blocked }}</span><label>Blocked</label></div>
+    <div class="bt-stat-card"><span>{{ stats.total_posts }}</span><label>Posts</label></div>
+    <div class="bt-stat-card"><span>{{ stats.total_updates }}</span><label>Updates</label></div>
+  </div>
+
+  <h2 class="bt-section-subtitle">Member Management</h2>
+  <div class="bt-table-wrap">
+    <table class="bt-table">
+      <thead>
+        <tr>
+          <th>Member</th><th>Email</th><th>Plan</th><th>Subscription</th>
+          <th>Status</th><th>Role</th><th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for u in users %}
+        <tr>
+          <td class="bt-table-user">
+            <img src="{{ profile_pic_url(u) }}" alt="">
+            <span>{{ u.full_name() }} {% if u.is_main_admin() %}<i class="fa-solid fa-lock" title="Protected main admin"></i>{% endif %}</span>
+          </td>
+          <td>{{ u.email }}</td>
+          <td><span class="bt-plan-badge bt-plan-{{ u.membership_plan|lower }}">{{ u.membership_plan }}</span></td>
+          <td>
+            {% if u.subscription_status == 'pending' %}
+            <form method="POST" action="{{ url_for('approve_user', user_id=u.id) }}">
+              <button type="submit" class="bt-btn bt-btn-sm bt-btn-gold">Approve</button>
+            </form>
+            {% else %}
+            <span class="bt-status-badge bt-status-active">Active</span>
+            {% endif %}
+          </td>
+          <td><span class="bt-status-badge bt-status-{{ u.account_status }}">{{ u.account_status|capitalize }}</span></td>
+          <td>{% if u.is_admin() %}{{ badge_icons.get(u.position,'🏅') }} {{ u.position }}{% else %}Member{% endif %}</td>
+          <td class="bt-table-actions">
+            <details>
+              <summary class="bt-btn bt-btn-outline bt-btn-sm">Manage</summary>
+              <div class="bt-manage-menu">
+
+                <form method="POST" action="{{ url_for('freeze_user', user_id=u.id) }}">
+                  <button type="submit">{{ 'Unfreeze' if u.account_status == 'frozen' else 'Freeze' }}</button>
+                </form>
+                <form method="POST" action="{{ url_for('block_user', user_id=u.id) }}">
+                  <button type="submit">{{ 'Unblock' if u.account_status == 'blocked' else 'Block' }}</button>
+                </form>
+
+                {% if u.is_admin() %}
+                <form method="POST" action="{{ url_for('demote_user', user_id=u.id) }}">
+                  <button type="submit">Demote to Member</button>
+                </form>
+                {% else %}
+                <form method="POST" action="{{ url_for('promote_user', user_id=u.id) }}">
+                  <select name="position">
+                    {% for p in positions %}<option value="{{ p }}">{{ p }}</option>{% endfor %}
+                  </select>
+                  <button type="submit">Promote</button>
+                </form>
+                {% endif %}
+
+                <form method="POST" action="{{ url_for('admin_reset_password', user_id=u.id) }}" onsubmit="return confirm('Generate a new temporary password?');">
+                  <button type="submit">Reset Password</button>
+                </form>
+
+                <form method="POST" action="{{ url_for('admin_edit_user', user_id=u.id) }}" class="bt-inline-edit">
+                  <input type="text" name="first_name" value="{{ u.first_name }}" placeholder="First name">
+                  <input type="text" name="surname" value="{{ u.surname }}" placeholder="Surname">
+                  <select name="membership_plan">
+                    {% for p in plans %}<option value="{{ p }}" {% if p==u.membership_plan %}selected{% endif %}>{{ p }}</option>{% endfor %}
+                  </select>
+                  <button type="submit">Save Edits</button>
+                </form>
+
+              </div>
+            </details>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+{% endblock %}

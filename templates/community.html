@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+{% block title %}Community{% endblock %}
+{% block content %}
+<section class="bt-page">
+  <h1 class="bt-page-title">Community</h1>
+
+  <div class="bt-create-card">
+    <form method="POST" action="{{ url_for('create_post') }}" class="bt-form">
+      <div class="bt-form-group">
+        <textarea name="content" rows="3" placeholder="What's on your mind?" required></textarea>
+      </div>
+      <button type="submit" class="bt-btn bt-btn-gold">Post</button>
+    </form>
+  </div>
+
+  <div class="bt-posts-list">
+    {% for post in posts %}
+    <div class="bt-post-card">
+      <div class="bt-post-header">
+        <img src="{{ profile_pic_url(post.author) }}" alt="" class="bt-post-avatar">
+        <div>
+          <strong>{{ post.author.full_name() }}
+            {% if post.author.is_admin() %}<span class="bt-badge-inline">{{ badge_icons.get(post.author.position,'🏅') }}</span>{% endif %}
+          </strong>
+          <span class="bt-post-date">{{ post.created_at.strftime('%d %b %Y, %H:%M') }}</span>
+        </div>
+      </div>
+
+      <p class="bt-post-content">{{ post.content }}</p>
+
+      <div class="bt-post-actions">
+        <form method="POST" action="{{ url_for('react_post', post_id=post.id) }}">
+          <button type="submit" class="bt-reaction-btn {% if post.user_has_reacted(current_user.id) %}active{% endif %}">
+            👍 {{ post.reaction_count() }}
+          </button>
+        </form>
+
+        {% if post.author_id == current_user.id or current_user.is_admin() %}
+        <form method="POST" action="{{ url_for('delete_post', post_id=post.id) }}" onsubmit="return confirm('Delete this post?');">
+          <button type="submit" class="bt-link-btn">Delete</button>
+        </form>
+        {% endif %}
+      </div>
+
+      <div class="bt-comments">
+        {% for c in post.comments %}
+        <div class="bt-comment">
+          <img src="{{ profile_pic_url(c.author) }}" alt="" class="bt-comment-avatar">
+          <div>
+            <strong>{{ c.author.full_name() }}</strong>
+            <p>{{ c.content }}</p>
+          </div>
+          {% if c.author_id == current_user.id or current_user.is_admin() %}
+          <form method="POST" action="{{ url_for('delete_comment', comment_id=c.id) }}" onsubmit="return confirm('Delete comment?');">
+            <button type="submit" class="bt-link-btn bt-link-btn-sm">&times;</button>
+          </form>
+          {% endif %}
+        </div>
+        {% endfor %}
+
+        <form method="POST" action="{{ url_for('add_comment', post_id=post.id) }}" class="bt-comment-form">
+          <input type="text" name="content" placeholder="Write a comment..." required>
+          <button type="submit"><i class="fa-solid fa-paper-plane"></i></button>
+        </form>
+      </div>
+    </div>
+    {% else %}
+    <p class="bt-empty">No posts yet. Be the first to share something!</p>
+    {% endfor %}
+  </div>
+</section>
+{% endblock %}

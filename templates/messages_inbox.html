@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block title %}Messages{% endblock %}
+{% block content %}
+<section class="bt-page">
+  <h1 class="bt-page-title"><i class="fa-solid fa-comments"></i> Messages</h1>
+
+  <div class="bt-inbox-list">
+    {% for c in conversations %}
+    <a href="{{ url_for('messages_chat', user_id=c.partner.id) }}"
+       class="bt-inbox-item {% if c.unread %}unread{% endif %}">
+      <img src="{{ profile_pic_url(c.partner) }}" alt="" class="bt-inbox-avatar">
+      <div class="bt-inbox-meta">
+        <strong>{{ c.partner.full_name() }}</strong>
+        <span>
+          {% if c.last_message %}
+            {{ c.last_message.content[:50] }}{% if c.last_message.content|length > 50 %}...{% endif %}
+          {% else %}
+            No messages yet
+          {% endif %}
+        </span>
+      </div>
+      {% if c.unread %}<span class="bt-inbox-badge">{{ c.unread }}</span>{% endif %}
+    </a>
+    {% else %}
+    <p class="bt-empty">No conversations yet. Visit a member's profile and tap "Message" to start chatting.</p>
+    {% endfor %}
+  </div>
+
+  <a href="{{ url_for('search') }}" class="bt-btn bt-btn-outline bt-btn-sm">Find Members to Message</a>
+</section>
+{% endblock %}

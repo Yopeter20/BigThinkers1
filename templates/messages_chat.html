@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block title %}Chat with {{ partner.full_name() }}{% endblock %}
+{% block content %}
+<section class="bt-page">
+  <div class="bt-chat-header">
+    <a href="{{ url_for('messages_inbox') }}" class="bt-chat-back"><i class="fa-solid fa-arrow-left"></i></a>
+    <img src="{{ profile_pic_url(partner) }}" alt="" class="bt-chat-avatar">
+    <div>
+      <strong>{{ partner.full_name() }}
+        {% if partner.is_admin() %}<span class="bt-badge-inline">{{ badge_icons.get(partner.position,'🏅') }}</span>{% endif %}
+      </strong><br>
+      <span class="bt-plan-badge bt-plan-{{ partner.membership_plan|lower }}">{{ partner.membership_plan }}</span>
+    </div>
+  </div>
+
+  <div class="bt-ai-chat-wrap">
+    <div class="bt-ai-chat" id="btChatWindow"
+         data-partner-id="{{ partner.id }}"
+         data-current-user-id="{{ current_user.id }}"
+         data-last-id="{{ thread[-1].id if thread else 0 }}">
+      {% for m in thread %}
+        <div class="bt-ai-message {% if m.sender_id == current_user.id %}bt-ai-user{% else %}bt-ai-bot{% endif %}" data-id="{{ m.id }}">
+          <p>{{ m.content }}</p>
+          <span class="bt-chat-time">{{ m.created_at.strftime('%H:%M') }}</span>
+        </div>
+      {% else %}
+        <p class="bt-empty">No messages yet. Say hello to {{ partner.first_name }}!</p>
+      {% endfor %}
+    </div>
+
+    <form id="btChatForm" class="bt-ai-input-row">
+      <input type="text" id="btChatInput" placeholder="Type a message..." autocomplete="off" required>
+      <button type="submit"><i class="fa-solid fa-paper-plane"></i></button>
+    </form>
+  </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/chat.js') }}"></script>
+{% endblock %}

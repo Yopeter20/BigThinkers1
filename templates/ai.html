@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block title %}BigThinkers AI{% endblock %}
+{% block content %}
+<section class="bt-page">
+  <h1 class="bt-page-title"><i class="fa-solid fa-robot"></i> BigThinkers AI</h1>
+  <p class="bt-section-text">Ask about education, business, careers, CVs, interviews, skills and leadership.</p>
+
+  {% if not ai_configured %}
+  <div class="bt-flash bt-flash-info bt-static-flash">
+    BigThinkers AI is not fully configured yet. You can still send messages — an administrator
+    needs to add an AI API key before real AI answers are available.
+  </div>
+  {% endif %}
+
+  <div class="bt-ai-chat-wrap">
+    <div class="bt-ai-chat" id="btAiChat">
+      <div class="bt-ai-message bt-ai-bot">
+        <p>Hi {{ current_user.first_name }}! I'm BigThinkers AI. How can I help you grow today?</p>
+      </div>
+    </div>
+
+    <div class="bt-ai-loading" id="btAiLoading" style="display:none;">
+      <span></span><span></span><span></span>
+    </div>
+
+    <form id="btAiForm" class="bt-ai-input-row">
+      <input type="text" id="btAiInput" placeholder="Type your question..." autocomplete="off" required>
+      <button type="submit"><i class="fa-solid fa-paper-plane"></i></button>
+    </form>
+
+    <button id="btAiClear" class="bt-btn bt-btn-ghost bt-btn-sm">Clear Conversation</button>
+  </div>
+
+  <div class="bt-whatsapp-support">
+    <h3>Need More Assistance?</h3>
+    <p>If you need more assistance, you can contact one of our BigThinkers co-founders on WhatsApp.</p>
+    <div class="bt-whatsapp-buttons">
+      <a href="https://wa.me/260971785677" target="_blank" rel="noopener" class="bt-btn bt-btn-whatsapp">
+        <i class="fa-brands fa-whatsapp"></i> Chat with Nkaka Peter
+      </a>
+      <a href="https://wa.me/260776662323" target="_blank" rel="noopener" class="bt-btn bt-btn-whatsapp">
+        <i class="fa-brands fa-whatsapp"></i> Chat with Milanzi William
+      </a>
+    </div>
+  </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/ai.js') }}"></script>
+{% endblock %}
