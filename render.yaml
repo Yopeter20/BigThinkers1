@@ -1,0 +1,25 @@
+services:
+  - type: web
+    name: bigthinkers
+    runtime: python
+    rootDir: BigThinkers
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn app:app --bind 0.0.0.0:$PORT
+    plan: free
+    envVars:
+      - key: SECRET_KEY
+        generateValue: true
+      - key: MAIN_ADMIN_EMAIL
+        sync: false
+      - key: MAIL_SERVER
+        value: smtp.gmail.com
+      - key: MAIL_PORT
+        value: 465
+      - key: MAIL_USERNAME
+        sync: false
+      - key: MAIL_PASSWORD
+        sync: false
+      - key: MAIL_SENDER_NAME
+        value: BigThinkers
+      - key: OPENAI_API_KEY
+        sync: false

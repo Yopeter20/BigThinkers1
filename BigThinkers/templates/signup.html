@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+{% block title %}Join BigThinkers{% endblock %}
+{% block content %}
+<section class="bt-auth-wrap">
+  <div class="bt-auth-card bt-auth-card-wide">
+    <h1 class="bt-auth-title">Join BigThinkers</h1>
+    <p class="bt-auth-sub">Create your account and start your journey.</p>
+
+    <div class="bt-plans">
+      <div class="bt-plan-chip"><strong>BASIC</strong><span>Free access to community &amp; updates</span></div>
+      <div class="bt-plan-chip"><strong>PREMIUM</strong><span>Priority opportunities &amp; content</span></div>
+      <div class="bt-plan-chip"><strong>VIP</strong><span>Full access &amp; exclusive updates</span></div>
+    </div>
+
+    <form method="POST" action="{{ url_for('signup') }}" class="bt-form">
+      <div class="bt-form-row">
+        <div class="bt-form-group">
+          <label for="first_name">First Name</label>
+          <input type="text" id="first_name" name="first_name" required value="{{ form.get('first_name','') }}">
+        </div>
+        <div class="bt-form-group">
+          <label for="surname">Surname</label>
+          <input type="text" id="surname" name="surname" required value="{{ form.get('surname','') }}">
+        </div>
+      </div>
+
+      <div class="bt-form-group">
+        <label for="email">Email</label>
+        <input type="email" id="email" name="email" required value="{{ form.get('email','') }}">
+      </div>
+
+      <div class="bt-form-group">
+        <label for="phone_number">Phone Number</label>
+        <div class="bt-phone-input">
+          <select name="country_code" id="country_code">
+            {% for name, code in country_codes %}
+              <option value="{{ code }}" {% if code == '+260' %}selected{% endif %}>{{ name }} ({{ code }})</option>
+            {% endfor %}
+          </select>
+          <input type="tel" id="phone_number" name="phone_number" placeholder="e.g. 971234567" value="{{ form.get('phone_number','') }}">
+        </div>
+      </div>
+
+      <div class="bt-form-group">
+        <label for="membership_plan">Membership Plan</label>
+        <select name="membership_plan" id="membership_plan">
+          <option value="BASIC">BASIC</option>
+          <option value="PREMIUM">PREMIUM</option>
+          <option value="VIP">VIP</option>
+        </select>
+      </div>
+
+      <div class="bt-form-row">
+        <div class="bt-form-group bt-password-group">
+          <label for="password">Password</label>
+          <input type="password" id="password" name="password" required minlength="6">
+          <i class="fa-solid fa-eye bt-toggle-password" data-target="password"></i>
+        </div>
+        <div class="bt-form-group bt-password-group">
+          <label for="confirm_password">Confirm Password</label>
+          <input type="password" id="confirm_password" name="confirm_password" required minlength="6">
+          <i class="fa-solid fa-eye bt-toggle-password" data-target="confirm_password"></i>
+        </div>
+      </div>
+
+      <div class="bt-checkbox-row">
+        <input type="checkbox" id="terms" name="terms">
+        <label for="terms">I agree to the Terms and Conditions and Privacy Policy.</label>
+      </div>
+
+      <button type="submit" class="bt-btn bt-btn-gold bt-btn-block">Create Account</button>
+    </form>
+
+    <p class="bt-auth-footer">Already have an account? <a href="{{ url_for('signin') }}">Sign In</a></p>
+  </div>
+</section>
+{% endblock %}

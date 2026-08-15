@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{% block title %}BigThinkers{% endblock %} | BigThinkers</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}?v=2">
+
+<!-- PWA / installable-app metadata -->
+<link rel="manifest" href="{{ url_for('static', filename='manifest.json') }}">
+<meta name="theme-color" content="#0d1b2a">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="BigThinkers">
+<link rel="icon" href="{{ url_for('static', filename='icons/favicon-32.png') }}" sizes="32x32">
+<link rel="icon" href="{{ url_for('static', filename='icons/favicon-16.png') }}" sizes="16x16">
+<link rel="apple-touch-icon" href="{{ url_for('static', filename='icons/icon-180.png') }}">
+{% block extra_css %}{% endblock %}
+</head>
+<body>
+
+<header class="bt-navbar">
+  <div class="bt-nav-inner">
+    <a href="{{ url_for('index') }}" class="bt-brand">
+      <span class="bt-brand-mark">BT</span>
+      <span class="bt-brand-text">BigThinkers</span>
+    </a>
+
+    <button class="bt-hamburger" id="btHamburger" aria-label="Toggle menu" aria-controls="btNavLinks" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+
+  <nav class="bt-nav-links" id="btNavLinks">
+    {% if current_user.is_authenticated %}
+      <a href="{{ url_for('dashboard') }}"><i class="fa-solid fa-house"></i> Home</a>
+      <a href="{{ url_for('search') }}"><i class="fa-solid fa-magnifying-glass"></i> Search</a>
+      <a href="{{ url_for('ai') }}"><i class="fa-solid fa-robot"></i> BigThinkers AI</a>
+      <a href="{{ url_for('updates') }}"><i class="fa-solid fa-bell"></i> Updates</a>
+      <a href="{{ url_for('messages_inbox') }}">
+        <i class="fa-solid fa-comments"></i> Messages
+        {% if unread_message_count %}<span class="bt-nav-badge">{{ unread_message_count }}</span>{% endif %}
+      </a>
+      <a href="{{ url_for('community') }}"><i class="fa-solid fa-people-group"></i> Community</a>
+      <a href="{{ url_for('profile') }}"><i class="fa-solid fa-user"></i> Profile</a>
+      {% if current_user.is_admin() %}
+      <a href="{{ url_for('admin') }}" class="bt-admin-link"><i class="fa-solid fa-shield-halved"></i> Admin</a>
+      {% endif %}
+      <a href="{{ url_for('logout') }}"><i class="fa-solid fa-right-from-bracket"></i> Logout</a>
+    {% else %}
+      <a href="{{ url_for('index') }}">Home</a>
+      <a href="{{ url_for('signin') }}">Sign In</a>
+      <a href="{{ url_for('signup') }}" class="bt-nav-cta">Join BigThinkers</a>
+    {% endif %}
+  </nav>
+</header>
+
+<main class="bt-main">
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      <div class="bt-flash-wrap">
+        {% for category, message in messages %}
+          <div class="bt-flash bt-flash-{{ category }}">
+            <span>{{ message }}</span>
+            <button class="bt-flash-close" onclick="this.parentElement.remove()">&times;</button>
+          </div>
+        {% endfor %}
+      </div>
+    {% endif %}
+  {% endwith %}
+
+  {% block content %}{% endblock %}
+</main>
+
+<footer class="bt-footer">
+  <div class="bt-footer-inner">
+    <div class="bt-footer-brand">
+      <h3>BigThinkers</h3>
+      <p>Bringing Great Minds Together</p>
+      <p class="bt-tagline">Dream • Learn • Build • Lead</p>
+    </div>
+    <div class="bt-footer-links">
+      <div>
+        <h4>Platform</h4>
+        <a href="{{ url_for('index') }}">About</a>
+        <a href="{{ url_for('updates') if current_user.is_authenticated else url_for('signin') }}">Updates</a>
+        <a href="{{ url_for('community') if current_user.is_authenticated else url_for('signin') }}">Community</a>
+      </div>
+      <div>
+        <h4>Legal</h4>
+        <a href="#">Privacy Policy</a>
+        <a href="#">Terms of Service</a>
+      </div>
+      <div>
+        <h4>Contact</h4>
+        <a href="https://wa.me/260971785677" target="_blank" rel="noopener">Nkaka Peter</a>
+        <a href="https://wa.me/260776662323" target="_blank" rel="noopener">Milanzi William</a>
+      </div>
+    </div>
+  </div>
+  <div class="bt-footer-bottom">
+    &copy; {{ 2026 }} BigThinkers. All rights reserved.
+  </div>
+</footer>
+
+<script src="{{ url_for('static', filename='js/main.js') }}?v=2"></script>
+<script>
+  if ("serviceWorker" in navigator) {
+    window.addEventListener("load", function () {
+      navigator.serviceWorker.register("/sw.js");
+    });
+  }
+</script>
+{% block extra_js %}{% endblock %}
+</body>
+</html>

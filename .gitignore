@@ -1,0 +1,7 @@
+BigThinkers/.env
+BigThinkers/instance/
+BigThinkers/uploads/profile_pictures/*
+!BigThinkers/uploads/profile_pictures/.gitkeep
+__pycache__/
+*.pyc
+.DS_Store

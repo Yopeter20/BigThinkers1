@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+{% block title %}Updates{% endblock %}
+{% block content %}
+<section class="bt-page">
+  <h1 class="bt-page-title">BigThinkers Updates</h1>
+
+  {% if current_user.is_admin() %}
+  <div class="bt-create-card">
+    <h3>Publish a New Update</h3>
+    <form method="POST" action="{{ url_for('create_update') }}" class="bt-form">
+      <div class="bt-form-group">
+        <label for="title">Title</label>
+        <input type="text" id="title" name="title" required>
+      </div>
+      <div class="bt-form-group">
+        <label for="content">Content</label>
+        <textarea id="content" name="content" rows="3" required></textarea>
+      </div>
+      <div class="bt-form-group">
+        <label for="target_plan">Visible To</label>
+        <select name="target_plan" id="target_plan">
+          <option value="BASIC">BASIC (and above)</option>
+          <option value="PREMIUM">PREMIUM (and above)</option>
+          <option value="VIP">VIP only</option>
+        </select>
+      </div>
+      <button type="submit" class="bt-btn bt-btn-gold">Publish Update</button>
+    </form>
+  </div>
+  {% endif %}
+
+  <div class="bt-updates-list">
+    {% if updates %}
+      {% for u in updates %}
+      <div class="bt-update-card">
+        <div class="bt-update-header">
+          <h3>{{ u.title }}</h3>
+          <span class="bt-plan-badge bt-plan-{{ u.target_plan|lower }}">{{ u.target_plan }}</span>
+        </div>
+        <p>{{ u.content }}</p>
+        <div class="bt-update-meta">
+          <span>By {{ u.author.full_name() if u.author else "BigThinkers" }}</span>
+          <span>{{ u.created_at.strftime('%d %b %Y, %H:%M') }}</span>
+        </div>
+        {% if current_user.is_admin() %}
+        <div class="bt-update-actions">
+          <form method="POST" action="{{ url_for('toggle_update', update_id=u.id) }}">
+            <button type="submit" class="bt-btn bt-btn-outline bt-btn-sm">Unpublish</button>
+          </form>
+          <form method="POST" action="{{ url_for('delete_update', update_id=u.id) }}" onsubmit="return confirm('Delete this update?');">
+            <button type="submit" class="bt-btn bt-btn-ghost bt-btn-sm">Delete</button>
+          </form>
+        </div>
+        {% endif %}
+      </div>
+      {% endfor %}
+    {% else %}
+      <p class="bt-empty">No updates available for your membership plan yet.</p>
+    {% endif %}
+  </div>
+</section>
+{% endblock %}

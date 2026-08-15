@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+{% block title %}Home{% endblock %}
+{% block content %}
+
+<section class="bt-hero">
+  <div class="bt-hero-inner">
+    <h1 class="bt-hero-title">BigThinkers</h1>
+    <p class="bt-hero-sub">Bringing Great Minds Together</p>
+    <p class="bt-hero-tagline">Dream • Learn • Build • Lead</p>
+    <p class="bt-hero-desc">
+      A global platform where ambitious people learn new skills, build real
+      opportunities, and lead the next generation of thinkers, creators and
+      entrepreneurs.
+    </p>
+    <div class="bt-hero-actions">
+      <a href="{{ url_for('signup') }}" class="bt-btn bt-btn-gold">Join BigThinkers</a>
+      <a href="{{ url_for('signin') }}" class="bt-btn bt-btn-outline">Sign In</a>
+      <a href="#opportunities" class="bt-btn bt-btn-ghost">Explore Opportunities</a>
+    </div>
+  </div>
+</section>
+
+<section class="bt-section" id="about">
+  <h2 class="bt-section-title">About BigThinkers</h2>
+  <p class="bt-section-text">
+    BigThinkers exists to empower people through education, skills
+    development, entrepreneurship and community. We believe every great
+    idea deserves a place to grow — and every great mind deserves a
+    community that pushes it forward.
+  </p>
+</section>
+
+<section class="bt-section bt-section-alt">
+  <h2 class="bt-section-title">What We Do</h2>
+  <div class="bt-card-grid">
+    <div class="bt-card"><i class="fa-solid fa-book"></i><h3>Learn</h3><p>Access knowledge, mentorship and skills training.</p></div>
+    <div class="bt-card"><i class="fa-solid fa-hammer"></i><h3>Build</h3><p>Turn ideas into real projects and businesses.</p></div>
+    <div class="bt-card"><i class="fa-solid fa-briefcase"></i><h3>Work</h3><p>Discover jobs and career opportunities.</p></div>
+    <div class="bt-card"><i class="fa-solid fa-people-group"></i><h3>Connect</h3><p>Network with driven, like-minded people.</p></div>
+    <div class="bt-card"><i class="fa-solid fa-lightbulb"></i><h3>Create</h3><p>Share your ideas, work and creativity.</p></div>
+    <div class="bt-card"><i class="fa-solid fa-crown"></i><h3>Lead</h3><p>Grow into the leader your community needs.</p></div>
+  </div>
+</section>
+
+<section class="bt-section" id="opportunities">
+  <h2 class="bt-section-title">Opportunities</h2>
+  <div class="bt-card-grid">
+    <div class="bt-card"><i class="fa-solid fa-briefcase"></i><h3>Jobs</h3><p>Career openings from trusted partners.</p></div>
+    <div class="bt-card"><i class="fa-solid fa-graduation-cap"></i><h3>Skills</h3><p>Courses and training to sharpen your edge.</p></div>
+    <div class="bt-card"><i class="fa-solid fa-chart-line"></i><h3>Business</h3><p>Resources to launch and grow a business.</p></div>
+    <div class="bt-card"><i class="fa-solid fa-rocket"></i><h3>Entrepreneurship</h3><p>Support for founders at every stage.</p></div>
+    <div class="bt-card"><i class="fa-solid fa-school"></i><h3>Education</h3><p>Structured learning paths for every goal.</p></div>
+  </div>
+</section>
+
+<section class="bt-section bt-section-alt" id="community-section">
+  <h2 class="bt-section-title">Community</h2>
+  <p class="bt-section-text">
+    Members connect, share ideas, ask questions and celebrate wins together
+    in a respectful, moderated space built for growth.
+  </p>
+</section>
+
+<section class="bt-section" id="why">
+  <h2 class="bt-section-title">Why BigThinkers?</h2>
+  <p class="bt-section-text">
+    Because big ideas need the right environment to grow — structure,
+    mentorship, opportunity and a community that believes in you.
+  </p>
+</section>
+
+<section class="bt-section bt-section-alt bt-vision-mission">
+  <div class="bt-vm-card">
+    <h3><i class="fa-solid fa-eye"></i> Our Vision</h3>
+    <p>To build a global generation of empowered thinkers, creators and leaders.</p>
+  </div>
+  <div class="bt-vm-card">
+    <h3><i class="fa-solid fa-flag"></i> Our Mission</h3>
+    <p>To equip people with the education, tools and community needed to dream boldly, learn continuously, build meaningfully and lead confidently.</p>
+  </div>
+</section>
+
+<section class="bt-cta">
+  <h2>Ready to think bigger?</h2>
+  <a href="{{ url_for('signup') }}" class="bt-btn bt-btn-gold">Join BigThinkers Today</a>
+</section>
+
+{% endblock %}
