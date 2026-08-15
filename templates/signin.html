@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block title %}Sign In{% endblock %}
+{% block content %}
+<section class="bt-auth-wrap">
+  <div class="bt-auth-card">
+    <h1 class="bt-auth-title">Welcome Back</h1>
+    <p class="bt-auth-sub">Sign in to continue to BigThinkers.</p>
+
+    <form method="POST" action="{{ url_for('signin') }}" class="bt-form">
+      <div class="bt-form-group">
+        <label for="email">Email</label>
+        <input type="email" id="email" name="email" required>
+      </div>
+
+      <div class="bt-form-group bt-password-group">
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password" required>
+        <i class="fa-solid fa-eye bt-toggle-password" data-target="password"></i>
+      </div>
+
+      <div class="bt-form-between">
+        <label class="bt-checkbox-inline">
+          <input type="checkbox" name="remember"> Remember me
+        </label>
+        <a href="{{ url_for('forgot_password') }}">Forgot password?</a>
+      </div>
+
+      <button type="submit" class="bt-btn bt-btn-gold bt-btn-block">Sign In</button>
+    </form>
+
+    <p class="bt-auth-footer">New to BigThinkers? <a href="{{ url_for('signup') }}">Create an account</a></p>
+  </div>
+</section>
+{% endblock %}

@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+{% block title %}Dashboard{% endblock %}
+{% block content %}
+<section class="bt-page">
+
+  <div class="bt-welcome-banner">
+    <div class="bt-welcome-avatar">
+      <img src="{{ profile_pic_url(current_user) }}" alt="Profile">
+    </div>
+    <div>
+      <h1>{{ greeting }}, {{ current_user.first_name }}.</h1>
+      <p>Welcome to the BigThinkers family.</p>
+      <span class="bt-plan-badge bt-plan-{{ current_user.membership_plan|lower }}">{{ current_user.membership_plan }}</span>
+      <span class="bt-status-badge bt-status-{{ current_user.subscription_status }}">{{ current_user.subscription_status|capitalize }}</span>
+    </div>
+  </div>
+
+  <div class="bt-dash-grid">
+    <div class="bt-dash-card">
+      <h3><i class="fa-solid fa-chart-simple"></i> Profile Completion</h3>
+      <div class="bt-progress"><div class="bt-progress-bar" style="width:{{ current_user.profile_completion() }}%"></div></div>
+      <p>{{ current_user.profile_completion() }}% complete</p>
+      <a href="{{ url_for('edit_profile') }}" class="bt-btn bt-btn-outline bt-btn-sm">Complete Profile</a>
+    </div>
+
+    <div class="bt-dash-card">
+      <h3><i class="fa-solid fa-users"></i> Community</h3>
+      {% if current_user.is_admin() %}
+      <p>{{ stats.total_members }} members &middot; {{ stats.total_posts }} posts</p>
+      {% else %}
+      <p>{{ stats.total_posts }} posts &middot; Connect with the community</p>
+      {% endif %}
+      <a href="{{ url_for('community') }}" class="bt-btn bt-btn-outline bt-btn-sm">Visit Community</a>
+    </div>
+
+    <div class="bt-dash-card">
+      <h3><i class="fa-solid fa-briefcase"></i> Opportunities</h3>
+      <p>Explore jobs, skills and business opportunities.</p>
+      <a href="{{ url_for('index') }}#opportunities" class="bt-btn bt-btn-outline bt-btn-sm">Explore</a>
+    </div>
+
+    <div class="bt-dash-card">
+      <h3><i class="fa-solid fa-bolt"></i> Quick Actions</h3>
+      <div class="bt-quick-actions">
+        <a href="{{ url_for('ai') }}"><i class="fa-solid fa-robot"></i> Ask AI</a>
+        <a href="{{ url_for('community') }}"><i class="fa-solid fa-pen"></i> New Post</a>
+        <a href="{{ url_for('edit_profile') }}"><i class="fa-solid fa-user-pen"></i> Edit Profile</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="bt-dash-lists">
+    <div class="bt-dash-list">
+      <h3>Latest Updates</h3>
+      {% if updates %}
+        {% for u in updates %}
+          <div class="bt-mini-item">
+            <strong>{{ u.title }}</strong>
+            <span>{{ u.created_at.strftime('%d %b %Y') }}</span>
+          </div>
+        {% endfor %}
+      {% else %}
+        <p class="bt-empty">No updates yet.</p>
+      {% endif %}
+      <a href="{{ url_for('updates') }}" class="bt-see-all">See all updates &rarr;</a>
+    </div>
+
+    <div class="bt-dash-list">
+      <h3>Community Activity</h3>
+      {% if recent_posts %}
+        {% for p in recent_posts %}
+          <div class="bt-mini-item">
+            <strong>{{ p.author.full_name() }}</strong>
+            <span>{{ p.content[:60] }}{% if p.content|length > 60 %}...{% endif %}</span>
+          </div>
+        {% endfor %}
+      {% else %}
+        <p class="bt-empty">No posts yet.</p>
+      {% endif %}
+      <a href="{{ url_for('community') }}" class="bt-see-all">See all posts &rarr;</a>
+    </div>
+  </div>
+
+</section>
+{% endblock %}

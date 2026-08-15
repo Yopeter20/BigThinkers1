@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% block title %}Edit Profile{% endblock %}
+{% block content %}
+<section class="bt-page">
+  <div class="bt-profile-card">
+    <h1>Edit Profile</h1>
+
+    <div class="bt-profile-header">
+      <img src="{{ profile_pic_url(user) }}" alt="Profile" class="bt-profile-pic">
+      <form method="POST" action="{{ url_for('edit_profile') }}" enctype="multipart/form-data" class="bt-pic-form">
+        <label for="profile_picture" class="bt-btn bt-btn-outline bt-btn-sm">Change Picture</label>
+        <input type="file" id="profile_picture" name="profile_picture" accept=".jpg,.jpeg,.png,.webp" style="display:none" onchange="this.form.submit()">
+      </form>
+      {% if user.profile_picture %}
+      <form method="POST" action="{{ url_for('remove_profile_picture') }}">
+        <button type="submit" class="bt-btn bt-btn-ghost bt-btn-sm">Remove Picture</button>
+      </form>
+      {% endif %}
+    </div>
+
+    <form method="POST" action="{{ url_for('edit_profile') }}" enctype="multipart/form-data" class="bt-form">
+      <div class="bt-form-row">
+        <div class="bt-form-group">
+          <label for="first_name">First Name</label>
+          <input type="text" id="first_name" name="first_name" value="{{ user.first_name }}" required>
+        </div>
+        <div class="bt-form-group">
+          <label for="surname">Surname</label>
+          <input type="text" id="surname" name="surname" value="{{ user.surname }}" required>
+        </div>
+      </div>
+
+      <div class="bt-form-group">
+        <label for="phone_number">Phone Number</label>
+        <div class="bt-phone-input">
+          <select name="country_code" id="country_code">
+            {% for name, code in country_codes %}
+              <option value="{{ code }}" {% if code == user.phone_country_code %}selected{% endif %}>{{ name }} ({{ code }})</option>
+            {% endfor %}
+          </select>
+          <input type="tel" id="phone_number" name="phone_number" value="{{ user.phone_number or '' }}">
+        </div>
+      </div>
+
+      <div class="bt-form-group">
+        <label for="bio">Bio</label>
+        <textarea id="bio" name="bio" rows="4">{{ user.bio or '' }}</textarea>
+      </div>
+
+      <button type="submit" class="bt-btn bt-btn-gold bt-btn-block">Save Changes</button>
+    </form>
+  </div>
+</section>
+{% endblock %}

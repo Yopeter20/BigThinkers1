@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block title %}Profile{% endblock %}
+{% block content %}
+<section class="bt-page">
+  <div class="bt-profile-card">
+    <div class="bt-profile-header">
+      <img src="{{ profile_pic_url(user) }}" alt="{{ user.full_name() }}" class="bt-profile-pic">
+      <div>
+        <h1>{{ user.full_name() }}
+          {% if user.is_admin() %}<span class="bt-badge-inline">{{ badge_icons.get(user.position,'🏅') }} {{ user.position }}</span>{% endif %}
+        </h1>
+        <p class="bt-profile-email">{{ user.email }}</p>
+        <span class="bt-plan-badge bt-plan-{{ user.membership_plan|lower }}">{{ user.membership_plan }}</span>
+        <span class="bt-status-badge bt-status-{{ user.subscription_status }}">{{ user.subscription_status|capitalize }}</span>
+      </div>
+    </div>
+
+    <div class="bt-profile-details">
+      <div><strong>Phone</strong><span>{{ user.phone_country_code }} {{ user.phone_number or "Not set" }}</span></div>
+      <div><strong>Account Status</strong><span>{{ user.account_status|capitalize }}</span></div>
+      <div><strong>Member Since</strong><span>{{ user.created_at.strftime('%d %b %Y') }}</span></div>
+      {% if user.is_admin() %}
+      <div><strong>Position</strong><span>{{ user.position }}</span></div>
+      {% endif %}
+    </div>
+
+    <div class="bt-profile-bio">
+      <h3>Bio</h3>
+      <p>{{ user.bio or "This member hasn't written a bio yet." }}</p>
+    </div>
+
+    {% if user.id == current_user.id %}
+    <div class="bt-profile-actions">
+      <a href="{{ url_for('edit_profile') }}" class="bt-btn bt-btn-gold">Edit Profile</a>
+      <a href="{{ url_for('change_password') }}" class="bt-btn bt-btn-outline">Change Password</a>
+    </div>
+    {% else %}
+    <div class="bt-profile-actions">
+      <a href="{{ url_for('messages_chat', user_id=user.id) }}" class="bt-btn bt-btn-gold">
+        <i class="fa-solid fa-comment"></i> Message
+      </a>
+    </div>
+    {% endif %}
+  </div>
+</section>
+{% endblock %}

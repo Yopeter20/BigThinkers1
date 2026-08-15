@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% block title %}Search{% endblock %}
+{% block content %}
+<section class="bt-page">
+  <h1 class="bt-page-title">Search BigThinkers</h1>
+
+  <form method="GET" action="{{ url_for('search') }}" class="bt-search-form">
+    <input type="text" name="q" placeholder="Search members, posts, updates..." value="{{ query }}">
+    <button type="submit"><i class="fa-solid fa-magnifying-glass"></i></button>
+  </form>
+
+  {% if query %}
+    <div class="bt-search-results">
+      <div class="bt-search-section">
+        <h3>Members ({{ members|length }})</h3>
+        {% for m in members %}
+          <div class="bt-search-item">
+            <a href="{{ url_for('view_profile', user_id=m.id) }}" style="display:flex;align-items:center;gap:10px;flex:1;">
+              <img src="{{ profile_pic_url(m) }}" alt="">
+              <span>{{ m.full_name() }}</span>
+            </a>
+            {% if m.id != current_user.id %}
+            <a href="{{ url_for('messages_chat', user_id=m.id) }}" title="Message {{ m.first_name }}">
+              <i class="fa-solid fa-comment"></i>
+            </a>
+            {% endif %}
+          </div>
+        {% else %}
+          <p class="bt-empty">No members found.</p>
+        {% endfor %}
+      </div>
+
+      <div class="bt-search-section">
+        <h3>Posts ({{ posts|length }})</h3>
+        {% for p in posts %}
+          <div class="bt-search-item"><span>{{ p.author.full_name() }}: {{ p.content[:80] }}</span></div>
+        {% else %}
+          <p class="bt-empty">No posts found.</p>
+        {% endfor %}
+      </div>
+
+      <div class="bt-search-section">
+        <h3>Updates ({{ updates|length }})</h3>
+        {% for u in updates %}
+          <div class="bt-search-item"><span>{{ u.title }}</span></div>
+        {% else %}
+          <p class="bt-empty">No updates found.</p>
+        {% endfor %}
+      </div>
+    </div>
+  {% endif %}
+</section>
+{% endblock %}

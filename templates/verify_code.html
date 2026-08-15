@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block title %}Verify Code{% endblock %}
+{% block content %}
+<section class="bt-auth-wrap">
+  <div class="bt-auth-card">
+    <h1 class="bt-auth-title">Verify Code</h1>
+    <p class="bt-auth-sub">
+      Enter the 6-digit code we emailed to <strong>{{ email }}</strong>. It expires in 10 minutes.
+    </p>
+    <form method="POST" action="{{ url_for('verify_code') }}" class="bt-form">
+      <div class="bt-form-group">
+        <label for="code">Reset Code</label>
+        <input type="text" id="code" name="code" inputmode="numeric" pattern="[0-9]*"
+               maxlength="6" placeholder="123456" required autofocus>
+      </div>
+      <button type="submit" class="bt-btn bt-btn-gold bt-btn-block">Verify Code</button>
+    </form>
+    <p class="bt-auth-footer">
+      Didn't get a code? <a href="{{ url_for('forgot_password') }}">Request a new one</a>
+    </p>
+    <p class="bt-auth-footer"><a href="{{ url_for('signin') }}">Back to Sign In</a></p>
+  </div>
+</section>
+{% endblock %}
